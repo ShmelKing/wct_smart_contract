@@ -1,0 +1,26 @@
+{
+  "name": "nft-tutorial",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@0x/subproviders": "^6.6.2",
+    "@metamask/eth-sig-util": "^4.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-etherscan": "^3.0.0",
+    "ethers": "^5.5.2",
+    "hardhat": "^2.7.0",
+    "node-fetch": "^2.6.6",
+    "opensea-js": "^2.0.1",
+    "web3": "^1.0.0-beta.34"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.4.0",
+    "dotenv": "^10.0.0"
+  }
+}
