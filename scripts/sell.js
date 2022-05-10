@@ -51,10 +51,8 @@ async function main(indexFrom, indexTo) {
     console.log("FIXED_PRICE = ", FIXED_PRICE);
 
     const listingDate = new Date(LISTING_DATE);
-    listingDate.setUTCHours(14, 0, 0);
 
     const expirationDate = new Date(EXPIRATION_DATE);
-    listingDate.setUTCHours(14, 0, 0);
 
     const listingTime = Math.round(listingDate / 1000);
     const expirationTime = Math.round(expirationDate / 1000);
@@ -78,7 +76,7 @@ async function main(indexFrom, indexTo) {
     );
 }
 
-task("sell-tokens-from-to", "Sell tokens using opensea API")
+task("sell-tokens-from-to", "Sell tokens using Opensea API")
     .addParam("indexFrom", "Index of token from which start sell tokens")
     .addParam("indexTo", "Index of token to which sell tokens include this index")
     .setAction(async function (taskArguments, hre) {
