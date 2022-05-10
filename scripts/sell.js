@@ -35,6 +35,18 @@ providerEngine.addProvider(mnemonicWalletSubprovider);
 providerEngine.addProvider(rpcSubprovider);
 providerEngine.start();
 
+
+console.log("Creating fixed price auctions...");
+console.log("FACTORY_CONTRACT_ADDRESS = ", FACTORY_CONTRACT_ADDRESS);
+console.log("OWNER_ADDRESS = ", OWNER_ADDRESS);
+console.log("FIXED_PRICE = ", FIXED_PRICE);
+
+const listingDate = new Date(LISTING_DATE);
+const expirationDate = new Date(EXPIRATION_DATE);
+
+const listingTime = Math.round(listingDate / 1000);
+const expirationTime = Math.round(expirationDate / 1000);
+
 const seaport = new OpenSeaPort(
     providerEngine,
     {
@@ -44,25 +56,13 @@ const seaport = new OpenSeaPort(
     (arg) => console.log(arg)
 );
 
-async function main(indexFrom, indexTo) {
-    console.log("Creating fixed price auctions...");
-    console.log("FACTORY_CONTRACT_ADDRESS = ", FACTORY_CONTRACT_ADDRESS);
-    console.log("OWNER_ADDRESS = ", OWNER_ADDRESS);
-    console.log("FIXED_PRICE = ", FIXED_PRICE);
-
-    const listingDate = new Date(LISTING_DATE);
-
-    const expirationDate = new Date(EXPIRATION_DATE);
-
-    const listingTime = Math.round(listingDate / 1000);
-    const expirationTime = Math.round(expirationDate / 1000);
-
+async function sellOrders(indexFrom, indexTo) {
     let assets = [];
-    for(let i = indexFrom; i <= indexTo; i++){
+    for (let i = indexFrom; i <= indexTo; i++) {
         assets.push({tokenId: i, tokenAddress: FACTORY_CONTRACT_ADDRESS})
     }
 
-    const fixedSellOrdersTwo = await seaport.createFactorySellOrders({
+    await seaport.createFactorySellOrders({
         assets: assets,
         factoryAddress: FACTORY_CONTRACT_ADDRESS,
         accountAddress: OWNER_ADDRESS,
@@ -72,7 +72,36 @@ async function main(indexFrom, indexTo) {
         numberOfOrders: NUM_FIXED_PRICE_AUCTIONS,
     });
     console.log(
-        `Successfully made ${fixedSellOrdersTwo.length} fixed-price sell orders for multiple assets at once!\n`
+        `Successfully made ${indexTo - indexFrom} fixed-price sell orders for multiple assets at once!\n`
+    );
+}
+
+
+async function sellOrdersWithoutApiKey(indexFrom, indexTo) {
+    for (let i = indexFrom; i <= indexTo; i++) {
+        await seaport.createSellOrder({
+            asset: {tokenId: i, tokenAddress: FACTORY_CONTRACT_ADDRESS},
+            accountAddress: OWNER_ADDRESS,
+            startAmount: FIXED_PRICE,
+            listingTime: listingTime,
+            expirationTime: expirationTime,
+        });
+        console.log(
+            `Successfully made fixed-price sell order for NFT ${i}!\n`
+        );
+    }
+}
+
+async function sellSingleNft(nftIndex) {
+    await seaport.createSellOrder({
+        asset: {tokenId: nftIndex, tokenAddress: FACTORY_CONTRACT_ADDRESS},
+        accountAddress: OWNER_ADDRESS,
+        startAmount: FIXED_PRICE,
+        listingTime: listingTime,
+        expirationTime: expirationTime,
+    });
+    console.log(
+        `Successfully made fixed-price sell order for NFT ${nftIndex}!\n`
     );
 }
 
@@ -80,5 +109,18 @@ task("sell-tokens-from-to", "Sell tokens using Opensea API")
     .addParam("indexFrom", "Index of token from which start sell tokens")
     .addParam("indexTo", "Index of token to which sell tokens include this index")
     .setAction(async function (taskArguments, hre) {
-        await main(taskArguments.indexFrom, taskArguments.indexTo);
+        await sellOrders(taskArguments.indexFrom, taskArguments.indexTo);
+    });
+
+task("sell-tokens-from-to-without-apikey", "Sell tokens using Opensea API")
+    .addParam("indexFrom", "Index of token from which start sell tokens")
+    .addParam("indexTo", "Index of token to which sell tokens include this index")
+    .setAction(async function (taskArguments, hre) {
+        await sellOrdersWithoutApiKey(taskArguments.indexFrom, taskArguments.indexTo);
+    });
+
+task("sell-single-token", "Sell tokens using Opensea API")
+    .addParam("nftIndex", "Index of token from which start sell tokens")
+    .setAction(async function (taskArguments, hre) {
+        await sellSingleNft(taskArguments.nftIndex);
     });

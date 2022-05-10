@@ -19,7 +19,7 @@ contract WCT is ERC721, PullPayment, Ownable {
     string public baseTokenURI;
 
     //  Worm Civilization Token - WCT
-    constructor() ERC721("Worm civilisation", "WCT") {
+    constructor() ERC721("Worm Civilization", "WCT") {
         baseTokenURI = "";
     }
 

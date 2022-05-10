@@ -15,7 +15,7 @@ task("mint", "Mints from the WCT contract")
             const transactionResponse = await contract.mintTo(
                 getEnvVariable("OWNER_ADDRESS"),
                 taskArguments.countPerTransaction,
-                {gasLimit: 3_500_000}
+                {gasLimit: 10_000_000}
             );
             console.log(`Transaction Hash: ${transactionResponse.hash}`);
         }

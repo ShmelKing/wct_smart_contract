@@ -7,5 +7,6 @@
 3) set base token url: npx hardhat set-base-token-uri --base-url {baseToken}
 4) verify smart-contract: npx hardhat verify {NFT_CONTRACT_ADDRESS}
 5) mint tokens: npx hardhat mint --count-per-transaction {contPerTx} --total-count {totalCount}
-6) selling tokens from index to index (for example: from 10 to 200):
+6) list first token from Opensea website manually
+7) List other tokens using js command from index to index (for example: from 10 to 200):
    npx hardhat sell-tokens-from-to --index-from {index-from} --index-to {indexTo}
